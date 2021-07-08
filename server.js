@@ -26,11 +26,15 @@ app.get("/api/hello", function (req, res) {
 //date send
 app.get('/api/:date?',(req,res) =>{
   let date = moment(req.params.date, ['YYYYMMD','DDMMMMY', 'MMMMDDY','x']).format();
-  if(date !== undefined){
+  if(req.params.date === undefined){
+    date = new Date();
+    res.send({"unix": Date.parse(date), "utc":date.toUTCString()});
+  }
+  else if(date !== 'Invalid date'){
     date = new Date(date);
     res.send({"unix":Date.parse(date),"utc":date.toUTCString()});
   }
-  else res.send({error: "Invalid Format"});
+  else res.send({error: "Invalid Date"});
 })
 
 

@@ -4,6 +4,7 @@
 // init project
 var express = require('express');
 var app = express();
+var moment = require('moment');
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
@@ -24,12 +25,12 @@ app.get("/api/hello", function (req, res) {
 });
 //date send
 app.get('/api/:date?',(req,res) =>{
-  let date;
-  if(req.params.date.indexOf('-') === -1){
-    date = new Date(parseInt(req.params.date));
+  let date = moment(req.params.date, ['YYYYMMD','DDMMMMY', 'MMMMDDY','x']).format();
+  if(date !== undefined){
+    date = new Date(date);
+    res.send({"unix":Date.parse(date),"utc":date.toUTCString()});
   }
-  else date = new Date(req.params.date);
-  res.send({"unix":Date.parse(date),"utc":date.toUTCString()});
+  else res.send({error: "Invalid Format"});
 })
 
 
